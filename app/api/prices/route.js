@@ -1,11 +1,18 @@
 import { NextResponse } from 'next/server'
 
+const cache = {}
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const symbol = searchParams.get('symbol')
 
   if (!symbol) {
     return NextResponse.json({ error: 'Symbol is required' }, { status: 400 })
+  }
+
+  if (cache[symbol]) {
+    console.log(`Cache hit for ${symbol}`)
+    return NextResponse.json(cache[symbol])
   }
 
   const apiKey = process.env.ALPHAVANTAGE_API_KEY
@@ -23,7 +30,7 @@ export async function GET(request) {
     return NextResponse.json({ error: 'No price data found' }, { status: 404 })
   }
 
-  // Convert the object into an array and calculate the changes per day
+  // Convert the objects into an array and calculate the changes per day
   const prices = Object.entries(timeSeries)
     .map(([date, values], index, arr) => {
       const close = parseFloat(values['4. close'])
@@ -45,6 +52,8 @@ export async function GET(request) {
     })
     // Only return the most recent 90 days
     .slice(0, 90)
+
+  cache[symbol] = prices
 
   return NextResponse.json(prices)
 }

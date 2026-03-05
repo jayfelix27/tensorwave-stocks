@@ -1,28 +1,34 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server'
 
-export async function GET (request){
-    // 1. extract the symbol from the URL query string
-    const { searchParams } = new URL(request.url)
-    const symbol = searchParams.get('symbol')
+// Simple in-memory cache so we don't waste API calls during development
+const cache = {}
 
-    // 2. If no symbol is found/provided, return an error
-    if (!symbol){
-        return NextResponse.json ({ error: "Symbol is required" }, { status: 400 })
-    }
+export async function GET(request) {
+  const { searchParams } = new URL(request.url)
+  const symbol = searchParams.get('symbol')
 
-    // 3. Read api key from env 
-    const apiKey = process.env.ALPHAVANTAGE_API_KEY
+  if (!symbol) {
+    return NextResponse.json({ error: 'Symbol is required' }, { status: 400 })
+  }
 
-    // 4. call AlphaVantage
-    const response = await fetch(
-        `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${apiKey}`
-    )
+  // If we already fetched this symbol, return the cached version
+  if (cache[symbol]) {
+    console.log(`Cache hit for ${symbol}`)
+    return NextResponse.json(cache[symbol])
+  }
 
-    // 5. Parse the response as a json file
-    const data = await response.json()
+  const apiKey = process.env.ALPHAVANTAGE_API_KEY
 
-    // 6. Send it back to whoever called this route
-    return NextResponse.json(data)
+  const response = await fetch(
+    `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${apiKey}`
+  )
 
-    
+  const data = await response.json()
+
+  // Only cache if we got real data back (not a rate limit message)
+  if (data.Symbol) {
+    cache[symbol] = data
+  }
+
+  return NextResponse.json(data)
 }
