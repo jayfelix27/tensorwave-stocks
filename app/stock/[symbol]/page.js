@@ -66,7 +66,7 @@ export default async function StockPage({ params }) {
         {/* Company Header */}
         <div className="flex items-center gap-5">
           {stockInfo && (
-            <div className="w-16 h-16 rounded-2xl bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-gray-800 flex items-center justify-center overflow-hidden shrink-0">
               <Image
                 src={`https://logo.clearbit.com/${stockInfo.domain}`}
                 alt={symbol}
