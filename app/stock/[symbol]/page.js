@@ -45,7 +45,7 @@ export default async function StockPage({ params }) {
   const prices = await pricesRes.json()
 
   return (
-    <main className="min-h-screen bg-gray-950">
+    <main className="min-h-screen bg-gray-900">
 
       {/* Top navigation bar */}
       <div className="bg-gray-900 border-b border-gray-800 px-6 py-4">

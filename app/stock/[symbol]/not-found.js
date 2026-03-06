@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-gray-950 flex items-center justify-center">
+    <main className="min-h-screen bg-gray-900 flex items-center justify-center">
       <div className="text-center space-y-4">
         <p className="text-5xl">🔍</p>
         <h2 className="text-2xl font-bold text-white">Stock Not Found</h2>
