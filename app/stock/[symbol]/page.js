@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { STOCKS } from '@/lib/stocks'
 import PriceChart from '@/components/PriceChart'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import CompanyLogo from '@/components/CompanyLogo'
 
 // Helper: returns green or red color based on positive/negative value
 function changeColor(value) {
@@ -67,13 +68,7 @@ export default async function StockPage({ params }) {
         <div className="flex items-center gap-5">
           {stockInfo && (
             <div className="w-16 h-16 rounded-2xl bg-gray-800 flex items-center justify-center overflow-hidden shrink-0">
-              <Image
-                src={`https://logo.clearbit.com/${stockInfo.domain}`}
-                alt={symbol}
-                width={64}
-                height={64}
-                className="object-contain"
-              />
+              <CompanyLogo domain={stockInfo.domain} symbol={symbol} />
             </div>
           )}
           <div>
